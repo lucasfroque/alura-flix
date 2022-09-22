@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ResourceNotFoundHandler {
+public class VideoNotFoundHandler {
 
     @ExceptionHandler(VideoNotFoundException.class)
     public ResponseEntity<StandardError> resourceNotFound(VideoNotFoundException e){
