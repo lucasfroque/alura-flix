@@ -30,4 +30,13 @@ public class VideoService {
                 () -> new ResourceNotFoundException("Video id: " + id + " not found"));
         return new VideoDto(video);
     }
+
+    public VideoDto update(Long id, VideoForm videoForm){
+        Video video = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Video id: " + id + " not found"));
+        video.setTitle(videoForm.getTitle());
+        video.setDescription(videoForm.getDescription());
+        video.setUrl(videoForm.getUrl());
+        return new VideoDto(repository.save(video));
+    }
 }
