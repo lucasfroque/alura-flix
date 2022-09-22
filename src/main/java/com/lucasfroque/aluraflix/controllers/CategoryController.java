@@ -6,13 +6,11 @@ import com.lucasfroque.aluraflix.entities.Category;
 import com.lucasfroque.aluraflix.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
@@ -30,5 +28,9 @@ public class CategoryController {
                 .path("/{id}").buildAndExpand(category).toUri();
 
         return ResponseEntity.created(uri).body(categoryDto);
+    }
+    @GetMapping
+    public ResponseEntity<List<CategoryDto>> listAll(){
+        return ResponseEntity.ok().body(service.findAll());
     }
 }
