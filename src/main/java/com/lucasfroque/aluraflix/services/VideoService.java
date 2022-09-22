@@ -3,7 +3,7 @@ package com.lucasfroque.aluraflix.services;
 import com.lucasfroque.aluraflix.dto.request.VideoDto;
 import com.lucasfroque.aluraflix.dto.response.VideoForm;
 import com.lucasfroque.aluraflix.entities.Video;
-import com.lucasfroque.aluraflix.exceptions.ResourceNotFoundException;
+import com.lucasfroque.aluraflix.exceptions.VideoNotFoundException;
 import com.lucasfroque.aluraflix.respositories.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,13 +28,13 @@ public class VideoService {
 
     public VideoDto findById(Long id){
         Video video = repository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Video id: " + id + " not found"));
+                () -> new VideoNotFoundException(id));
         return new VideoDto(video);
     }
 
     public VideoDto update(Long id, VideoForm videoForm){
         Video video = repository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Video id: " + id + " not found"));
+                () -> new VideoNotFoundException(id));
         video.setTitle(videoForm.getTitle());
         video.setDescription(videoForm.getDescription());
         video.setUrl(videoForm.getUrl());
@@ -45,7 +45,7 @@ public class VideoService {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e){
-            throw new ResourceNotFoundException("Video id: " + id + " not found");
+            throw new VideoNotFoundException(id);
         }
     }
 

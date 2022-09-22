@@ -1,5 +1,6 @@
 package com.lucasfroque.aluraflix.exceptions.handler;
 
+import com.lucasfroque.aluraflix.exceptions.handler.models.ValidationError;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
