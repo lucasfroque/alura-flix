@@ -44,4 +44,10 @@ public class VideoController {
     public ResponseEntity<VideoDto> update(@PathVariable Long id, @RequestBody @Validated VideoForm videoForm){
         return ResponseEntity.ok().body(service.update(id, videoForm));
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        service.delete(id);
+       return ResponseEntity.ok("Successfully deleted");
+    }
 }

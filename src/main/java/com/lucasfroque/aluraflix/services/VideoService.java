@@ -6,6 +6,7 @@ import com.lucasfroque.aluraflix.entities.Video;
 import com.lucasfroque.aluraflix.exceptions.ResourceNotFoundException;
 import com.lucasfroque.aluraflix.respositories.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,4 +40,13 @@ public class VideoService {
         video.setUrl(videoForm.getUrl());
         return new VideoDto(repository.save(video));
     }
+
+    public void delete(Long id){
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e){
+            throw new ResourceNotFoundException("Video id: " + id + " not found");
+        }
+    }
+
 }
