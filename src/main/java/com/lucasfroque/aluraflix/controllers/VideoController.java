@@ -33,4 +33,8 @@ public class VideoController {
     public ResponseEntity<List<VideoDto>> findAll(){
         return ResponseEntity.ok().body(service.findAll());
     }
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<VideoDto> findById(@PathVariable Long id){
+        return ResponseEntity.ok().body(service.findById(id));
+    }
 }
