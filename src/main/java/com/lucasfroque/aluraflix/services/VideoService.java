@@ -1,7 +1,7 @@
 package com.lucasfroque.aluraflix.services;
 
-import com.lucasfroque.aluraflix.dto.request.VideoDto;
-import com.lucasfroque.aluraflix.dto.response.VideoForm;
+import com.lucasfroque.aluraflix.dto.response.VideoDto;
+import com.lucasfroque.aluraflix.dto.request.VideoForm;
 import com.lucasfroque.aluraflix.entities.Video;
 import com.lucasfroque.aluraflix.exceptions.VideoNotFoundException;
 import com.lucasfroque.aluraflix.respositories.VideoRepository;

@@ -1,4 +1,4 @@
-package com.lucasfroque.aluraflix.dto.response;
+package com.lucasfroque.aluraflix.dto.request;
 
 import com.lucasfroque.aluraflix.entities.Video;
 import lombok.AllArgsConstructor;
