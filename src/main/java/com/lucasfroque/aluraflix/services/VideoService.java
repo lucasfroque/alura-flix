@@ -44,7 +44,12 @@ public class VideoService {
                 () -> new VideoNotFoundException(id));
         return new VideoDto(video);
     }
-
+    public List<VideoDto> findByName(String name){
+        return videoRepository.findVideosByTitleContainingIgnoreCase(name)
+                .stream()
+                .map(VideoDto::new)
+                .toList();
+    }
     public VideoDto update(Long id, VideoForm videoForm){
         Video video = videoRepository.findById(id).orElseThrow(
                 () -> new VideoNotFoundException(id));
