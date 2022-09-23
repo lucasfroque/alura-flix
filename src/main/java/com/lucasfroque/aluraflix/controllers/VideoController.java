@@ -6,10 +6,10 @@ import com.lucasfroque.aluraflix.entities.Video;
 import com.lucasfroque.aluraflix.services.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class VideoController {
     private VideoService service;
 
     @PostMapping
-    public ResponseEntity<VideoDto> create(@RequestBody @Validated VideoForm videoForm){
+    public ResponseEntity<VideoDto> create(@RequestBody @Valid VideoForm videoForm){
         Video newVideo = service.create(videoForm);
         VideoDto videoDto = new VideoDto(newVideo);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -41,7 +41,7 @@ public class VideoController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<VideoDto> update(@PathVariable Long id, @RequestBody @Validated VideoForm videoForm){
+    public ResponseEntity<VideoDto> update(@PathVariable Long id, @RequestBody @Valid VideoForm videoForm){
         return ResponseEntity.ok().body(service.update(id, videoForm));
     }
 

@@ -29,4 +29,11 @@ public class CategoryService {
                 .map(CategoryDto::new)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
     }
+    public CategoryDto update(Long id, CategoryForm categoryForm){
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+        category.setTitle(categoryForm.getTitle());
+        category.setColor(categoryForm.getColor());
+        return new CategoryDto(repository.save(category));
+    }
 }
