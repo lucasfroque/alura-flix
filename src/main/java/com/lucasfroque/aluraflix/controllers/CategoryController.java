@@ -2,6 +2,7 @@ package com.lucasfroque.aluraflix.controllers;
 
 import com.lucasfroque.aluraflix.dto.request.CategoryForm;
 import com.lucasfroque.aluraflix.dto.response.CategoryDto;
+import com.lucasfroque.aluraflix.dto.response.CategoryWithVideoDto;
 import com.lucasfroque.aluraflix.entities.Category;
 import com.lucasfroque.aluraflix.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,10 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findById(id));
     }
-
+    @GetMapping(value = "/{id}/videos")
+    public ResponseEntity<CategoryWithVideoDto> findByIdWithVideos(@PathVariable Long id){
+        return ResponseEntity.ok().body(service.findByIdWithVideos(id));
+    }
     @PutMapping(value = "/{id}")
     public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody @Valid CategoryForm categoryForm){
         return ResponseEntity.ok().body(service.update(id, categoryForm));

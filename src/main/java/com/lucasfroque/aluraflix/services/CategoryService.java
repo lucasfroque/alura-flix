@@ -2,6 +2,7 @@ package com.lucasfroque.aluraflix.services;
 
 import com.lucasfroque.aluraflix.dto.request.CategoryForm;
 import com.lucasfroque.aluraflix.dto.response.CategoryDto;
+import com.lucasfroque.aluraflix.dto.response.CategoryWithVideoDto;
 import com.lucasfroque.aluraflix.entities.Category;
 import com.lucasfroque.aluraflix.exceptions.CategoryNotFoundException;
 import com.lucasfroque.aluraflix.exceptions.VideoNotFoundException;
@@ -29,6 +30,11 @@ public class CategoryService {
     public CategoryDto findById(Long id){
         return repository.findById(id)
                 .map(CategoryDto::new)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+    }
+    public CategoryWithVideoDto findByIdWithVideos(Long id){
+        return repository.findById(id)
+                .map(CategoryWithVideoDto::new)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
     }
     public CategoryDto update(Long id, CategoryForm categoryForm){
