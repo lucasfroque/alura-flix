@@ -25,6 +25,9 @@ public class VideoService {
 
 
     public Video create(VideoForm videoForm){
+        if(videoForm.getCategoryId() == null){
+            videoForm.setCategoryId(1L);
+        }
         Category category = categoryRepository.findById(videoForm.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(videoForm.getCategoryId()));
         Video video = videoForm.toVideo();

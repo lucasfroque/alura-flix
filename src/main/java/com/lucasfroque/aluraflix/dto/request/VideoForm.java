@@ -4,11 +4,13 @@ import com.lucasfroque.aluraflix.entities.Video;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoForm {
@@ -24,7 +26,6 @@ public class VideoForm {
     private Long categoryId;
 
     public Video toVideo(){
-
-        return new Video(title, description, url);
+        return new Video(this.title, this.description, this.url);
     }
 }
