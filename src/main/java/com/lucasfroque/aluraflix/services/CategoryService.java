@@ -4,8 +4,10 @@ import com.lucasfroque.aluraflix.dto.request.CategoryForm;
 import com.lucasfroque.aluraflix.dto.response.CategoryDto;
 import com.lucasfroque.aluraflix.entities.Category;
 import com.lucasfroque.aluraflix.exceptions.CategoryNotFoundException;
+import com.lucasfroque.aluraflix.exceptions.VideoNotFoundException;
 import com.lucasfroque.aluraflix.respositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +37,12 @@ public class CategoryService {
         category.setTitle(categoryForm.getTitle());
         category.setColor(categoryForm.getColor());
         return new CategoryDto(repository.save(category));
+    }
+    public void delete(Long id){
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e){
+            throw new VideoNotFoundException(id);
+        }
     }
 }
