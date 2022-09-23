@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_category")
@@ -20,6 +21,8 @@ public class Category {
     private Long id;
     private String title;
     private String color;
+    @OneToMany(mappedBy = "category")
+    private List<Video> video;
 
     public Category(String title, String color) {
         this.title = title;

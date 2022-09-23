@@ -21,6 +21,7 @@ public class VideoForm {
     @NotBlank(message = "url cannot be null or empty")
     @Size(min = 10, message = "url must have at least 10 characters")
     private String url;
+    private Long categoryId;
 
     public Video toVideo(){
 

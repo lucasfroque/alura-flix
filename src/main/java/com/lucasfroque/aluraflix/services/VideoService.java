@@ -2,8 +2,11 @@ package com.lucasfroque.aluraflix.services;
 
 import com.lucasfroque.aluraflix.dto.response.VideoDto;
 import com.lucasfroque.aluraflix.dto.request.VideoForm;
+import com.lucasfroque.aluraflix.entities.Category;
 import com.lucasfroque.aluraflix.entities.Video;
+import com.lucasfroque.aluraflix.exceptions.CategoryNotFoundException;
 import com.lucasfroque.aluraflix.exceptions.VideoNotFoundException;
+import com.lucasfroque.aluraflix.respositories.CategoryRepository;
 import com.lucasfroque.aluraflix.respositories.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,34 +19,41 @@ import java.util.List;
 public class VideoService {
 
     @Autowired
-    private VideoRepository repository;
+    private VideoRepository videoRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
 
     public Video create(VideoForm videoForm){
-        return repository.save(videoForm.toVideo());
+        Category category = categoryRepository.findById(videoForm.getCategoryId())
+                .orElseThrow(() -> new CategoryNotFoundException(videoForm.getCategoryId()));
+        Video video = videoForm.toVideo();
+        video.setCategory(category);
+        return videoRepository.save(video);
     }
 
     public List<VideoDto> findAll(){
-        return repository.findAll().stream().map(VideoDto::new).toList();
+        return videoRepository.findAll().stream().map(VideoDto::new).toList();
     }
 
     public VideoDto findById(Long id){
-        Video video = repository.findById(id).orElseThrow(
+        Video video = videoRepository.findById(id).orElseThrow(
                 () -> new VideoNotFoundException(id));
         return new VideoDto(video);
     }
 
     public VideoDto update(Long id, VideoForm videoForm){
-        Video video = repository.findById(id).orElseThrow(
+        Video video = videoRepository.findById(id).orElseThrow(
                 () -> new VideoNotFoundException(id));
         video.setTitle(videoForm.getTitle());
         video.setDescription(videoForm.getDescription());
         video.setUrl(videoForm.getUrl());
-        return new VideoDto(repository.save(video));
+        return new VideoDto(videoRepository.save(video));
     }
 
     public void delete(Long id){
         try {
-            repository.deleteById(id);
+            videoRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e){
             throw new VideoNotFoundException(id);
         }
