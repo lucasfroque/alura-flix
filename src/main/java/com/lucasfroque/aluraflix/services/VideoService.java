@@ -44,7 +44,7 @@ public class VideoService {
                 () -> new VideoNotFoundException(id));
         return new VideoDto(video);
     }
-    public List<VideoDto> findByName(String name){
+    public List<VideoDto> findByTitle(String name){
         return videoRepository.findVideosByTitleContainingIgnoreCase(name)
                 .stream()
                 .map(VideoDto::new)
@@ -53,9 +53,12 @@ public class VideoService {
     public VideoDto update(Long id, VideoForm videoForm){
         Video video = videoRepository.findById(id).orElseThrow(
                 () -> new VideoNotFoundException(id));
+        Category category = categoryRepository.findById(videoForm.getCategoryId())
+                .orElseThrow(() -> new CategoryNotFoundException(videoForm.getCategoryId()));
         video.setTitle(videoForm.getTitle());
         video.setDescription(videoForm.getDescription());
         video.setUrl(videoForm.getUrl());
+        video.setCategory(category);
         return new VideoDto(videoRepository.save(video));
     }
 

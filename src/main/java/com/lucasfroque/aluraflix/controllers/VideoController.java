@@ -37,7 +37,7 @@ public class VideoController {
 
     @GetMapping(value = "/")
     public ResponseEntity<List<VideoDto>> findByName(@RequestParam String search){
-        return ResponseEntity.ok(service.findByName(search));
+        return ResponseEntity.ok(service.findByTitle(search));
     }
     @GetMapping(value = "/{id}")
     public ResponseEntity<VideoDto> findById(@PathVariable Long id){
