@@ -14,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,11 +51,16 @@ class VideoControllerTest {
     VideoDto videoDto;
     VideoForm videoForm;
 
+    List<Video> videos;
+    Page<VideoDto> videoPage;
+
     @BeforeEach
     void setUp() {
         video = new Video(1L, TITLE, DESCRIPTION, URL, new Category());
         videoDto = new VideoDto(video);
         videoForm = new VideoForm(TITLE, DESCRIPTION, URL, 1L);
+        videos = List.of(video);
+        videoPage = new PageImpl<>(List.of(videoDto));
     }
 
     @Test
@@ -83,14 +90,15 @@ class VideoControllerTest {
 
     @Test
     void when_findAll_then_return_list_of_videos_and_status_200() throws Exception {
-        when(service.findAll()).thenReturn(List.of(videoDto));
+        when(service.findAll(any())).thenReturn(videoPage);
+
 
         mockMvc.perform(get("/videos"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(videoDto.getId()))
-                .andExpect(jsonPath("$[0].title").value(videoDto.getTitle()))
-                .andExpect(jsonPath("$[0].description").value(videoDto.getDescription()))
-                .andExpect(jsonPath("$[0].url").value(videoDto.getUrl()));
+                .andExpect(jsonPath("$.content[0].id").value(videoDto.getId()))
+                .andExpect(jsonPath("$.content[0].title").value(videoDto.getTitle()))
+                .andExpect(jsonPath("$.content[0].description").value(videoDto.getDescription()))
+                .andExpect(jsonPath("$.content[0].url").value(videoDto.getUrl()));
     }
 
     @Test
@@ -113,15 +121,15 @@ class VideoControllerTest {
     }
 
     @Test
-    void when_findByTitle_then_return_video_and_status_200() throws Exception {
-        when(service.findByTitle(TITLE)).thenReturn(List.of(videoDto));
+    void when_filterByTitle_then_return_video_and_status_200() throws Exception {
+        when(service.findByTitle(any(), any())).thenReturn(videoPage);
 
-        mockMvc.perform(get("/videos/?search=" + TITLE))
+        mockMvc.perform(get("/videos/?title=" + TITLE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(videoDto.getId()))
-                .andExpect(jsonPath("$[0].title").value(videoDto.getTitle()))
-                .andExpect(jsonPath("$[0].description").value(videoDto.getDescription()))
-                .andExpect(jsonPath("$[0].url").value(videoDto.getUrl()));
+                .andExpect(jsonPath("$.content[0].id").value(videoDto.getId()))
+                .andExpect(jsonPath("$.content[0].title").value(videoDto.getTitle()))
+                .andExpect(jsonPath("$.content[0].description").value(videoDto.getDescription()))
+                .andExpect(jsonPath("$.content[0].url").value(videoDto.getUrl()));
     }
 
     @Test

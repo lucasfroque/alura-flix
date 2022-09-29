@@ -14,6 +14,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -44,6 +48,8 @@ class CategoryControllerTest {
 
     Video video;
 
+    Page<CategoryDto> page;
+
     @Autowired
     MockMvc mockMvc;
     @MockBean
@@ -58,6 +64,8 @@ class CategoryControllerTest {
         categoryDto = new CategoryDto(category);
         categoryWithVideoDto = new CategoryWithVideoDto(category);
         categoryForm = new CategoryForm(TITLE, YELLOW);
+        page = new PageImpl<>(List.of(new CategoryDto(category)));
+
     }
 
     @Test
@@ -95,16 +103,13 @@ class CategoryControllerTest {
 
     @Test
     void when_findAll_then_return_list_of_categories_and_status_200() throws Exception {
-        when(service.findAll()).thenReturn(Arrays.asList(categoryDto, categoryDto));
+        when(service.findAll(any())).thenReturn(page);
 
         mockMvc.perform(get("/categories"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(ID))
-                .andExpect(jsonPath("$[0].title").value(TITLE))
-                .andExpect(jsonPath("$[0].color").value(YELLOW))
-                .andExpect(jsonPath("$[1].id").value(ID))
-                .andExpect(jsonPath("$[1].title").value(TITLE))
-                .andExpect(jsonPath("$[1].color").value(YELLOW));
+                .andExpect(jsonPath("$.content[0].id").value(ID))
+                .andExpect(jsonPath("$.content[0].title").value(TITLE))
+                .andExpect(jsonPath("$.content[0].color").value(YELLOW));
     }
 
     @Test

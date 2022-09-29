@@ -5,6 +5,11 @@ import com.lucasfroque.aluraflix.dto.request.VideoForm;
 import com.lucasfroque.aluraflix.entities.Video;
 import com.lucasfroque.aluraflix.services.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -31,14 +36,16 @@ public class VideoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VideoDto>> findAll(){
-        return ResponseEntity.ok().body(service.findAll());
+    public ResponseEntity<Page<VideoDto>> findAll(@RequestParam (required = false) String title,
+                                                  @PageableDefault(size = 10, direction = Direction.DESC, sort = "id") Pageable pageable){
+
+        if(title != null){
+            return ResponseEntity.ok().body(service.findByTitle(title, pageable));
+        }
+
+        return ResponseEntity.ok().body(service.findAll(pageable));
     }
 
-    @GetMapping(value = "/")
-    public ResponseEntity<List<VideoDto>> findByName(@RequestParam String search){
-        return ResponseEntity.ok(service.findByTitle(search));
-    }
     @GetMapping(value = "/{id}")
     public ResponseEntity<VideoDto> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findById(id));

@@ -14,6 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,12 +46,13 @@ class VideoServiceTest {
     @Mock
     CategoryRepository categoryRepository;
 
-    Video videoWithCategory1;
-    Video videoWithCategory2;
+    Video video1;
+    Video video2;
     VideoForm videoForm;
     VideoForm videoFormWithoutCategory;
     Category category;
     Category category2;
+    Page<Video> videoPage;
 
     @BeforeEach
     void setUp() {
@@ -57,23 +61,24 @@ class VideoServiceTest {
         category2 = new Category(CATEGORY_TITLE_2, CATEGORY_COLOR_2);
         category2.setId(CATEGORY_ID_2);
 
-        videoWithCategory1 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category);
-        videoWithCategory2 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category2);
+        video1 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category);
+        video2 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category2);
 
         videoForm = new VideoForm(VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, CATEGORY_ID_2);
         videoFormWithoutCategory = new VideoForm(VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, null);
+        videoPage = new PageImpl<>(List.of(video1, video2));
     }
 
     @Test
     void should_create_video_successfully() {
         when(videoRepository.save(any(Video.class)))
-                .thenReturn(videoWithCategory2);
+                .thenReturn(video2);
         when(categoryRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(category2));
 
         Video response = service.create(videoForm);
 
-        assertEquals(videoWithCategory2, response);
+        assertEquals(video2, response);
         assertEquals(VIDEO_ID, response.getId());
         assertEquals(VIDEO_TITLE, response.getTitle());
         assertEquals(VIDEO_DESCRIPTION, response.getDescription());
@@ -83,13 +88,13 @@ class VideoServiceTest {
     @Test
     void should_create_video_with_categoryId_1() {
         when(videoRepository.save(any(Video.class)))
-                .thenReturn(videoWithCategory1);
+                .thenReturn(video1);
         when(categoryRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(category));
 
         Video response = service.create(videoFormWithoutCategory);
 
-        assertEquals(videoWithCategory1, response);
+        assertEquals(video1, response);
         assertEquals(response.getId(), VIDEO_ID);
         assertEquals(response.getTitle(), VIDEO_TITLE);
         assertEquals(response.getDescription(), VIDEO_DESCRIPTION);
@@ -108,12 +113,12 @@ class VideoServiceTest {
 
     @Test
     void should_return_list_of_videos() {
-        when(videoRepository.findAll())
-                .thenReturn(List.of(videoWithCategory1, videoWithCategory2));
-        List<VideoDto> response = service.findAll();
+        when(videoRepository.findAll(any(Pageable.class)))
+                .thenReturn(videoPage);
+
+        List<VideoDto> response = service.findAll(Pageable.ofSize(10)).toList();
 
         assertEquals(2, response.size());
-        assertEquals(response.get(0).getClass(), VideoDto.class);
         assertEquals(VIDEO_ID, response.get(0).getId());
         assertEquals(VIDEO_TITLE, response.get(0).getTitle());
         assertEquals(VIDEO_DESCRIPTION, response.get(0).getDescription());
@@ -123,7 +128,7 @@ class VideoServiceTest {
     @Test
     void should_return_video_by_id() {
         when(videoRepository.findById(any(Long.class)))
-                .thenReturn(Optional.of(videoWithCategory1));
+                .thenReturn(Optional.of(video1));
 
         VideoDto response = service.findById(VIDEO_ID);
 
@@ -143,12 +148,12 @@ class VideoServiceTest {
     }
 
     @Test
-    void should_return_list_of_video_by_title() {
+    void should_return_list_of_video_filtered_by_title() {
 
-        when(videoRepository.findVideosByTitleContainingIgnoreCase(any(String.class)))
-                .thenReturn(List.of(videoWithCategory1, videoWithCategory2));
+        when(videoRepository.findVideosByTitleContainingIgnoreCase(any(), any()))
+                .thenReturn(videoPage);
 
-        List<VideoDto> response = service.findByTitle(VIDEO_TITLE);
+        List<VideoDto> response = service.findByTitle(VIDEO_TITLE, Pageable.ofSize(10)).toList();
 
         assertEquals(2, response.size());
         assertEquals(response.get(0).getClass(), VideoDto.class);
@@ -161,11 +166,11 @@ class VideoServiceTest {
     @Test
     void should_update_video_successfully() {
         when(videoRepository.findById(any(Long.class)))
-                .thenReturn(Optional.of(videoWithCategory2));
+                .thenReturn(Optional.of(video2));
         when(categoryRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(category2));
         when(videoRepository.save(any(Video.class)))
-                .thenReturn(videoWithCategory2);
+                .thenReturn(video2);
 
         VideoDto response = service.update(VIDEO_ID, videoForm);
 
@@ -187,7 +192,7 @@ class VideoServiceTest {
     @Test
     void should_throw_exception_when_category_id_is_not_found_when_update() {
         when(videoRepository.findById(any(Long.class)))
-                .thenReturn(Optional.of(videoWithCategory2));
+                .thenReturn(Optional.of(video2));
         when(categoryRepository.findById(any(Long.class)))
                 .thenReturn(Optional.empty());
 

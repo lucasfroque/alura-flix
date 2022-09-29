@@ -13,6 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -40,6 +43,8 @@ class CategoryServiceTest {
 
     Video video;
 
+    Page<Category> categoryPage;
+
 
     @BeforeEach
     void setUp() {
@@ -48,6 +53,7 @@ class CategoryServiceTest {
         category.setId(CATEGORY_ID);
         category.getVideo().add(video);
         categoryForm = new CategoryForm(CATEGORY, COLOR);
+        categoryPage = new PageImpl<>(List.of(category));
     }
 
     @Test
@@ -65,9 +71,10 @@ class CategoryServiceTest {
 
     @Test
     void should_return_all_categories() {
-        when(repository.findAll()).thenReturn(List.of(category));
+        when(repository.findAll(any(Pageable.class)))
+                .thenReturn(categoryPage);
 
-        List<CategoryDto> response = service.findAll();
+        List<CategoryDto> response = service.findAll(Pageable.ofSize(10)).stream().toList();
 
         assertEquals(CategoryDto.class, response.get(0).getClass());
         assertEquals(1, response.size());

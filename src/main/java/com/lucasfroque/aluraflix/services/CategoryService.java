@@ -9,6 +9,8 @@ import com.lucasfroque.aluraflix.exceptions.VideoNotFoundException;
 import com.lucasfroque.aluraflix.respositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +24,9 @@ public class CategoryService {
     public Category create(CategoryForm categoryForm){
         return repository.save(categoryForm.toCategory());
     }
-    public List<CategoryDto> findAll(){
-        return repository.findAll()
-                .stream()
-                .map(CategoryDto::new).toList();
+    public Page<CategoryDto> findAll(Pageable pageable){
+        return repository.findAll(pageable)
+                .map(CategoryDto::new);
     }
     public CategoryDto findById(Long id){
         return repository.findById(id)

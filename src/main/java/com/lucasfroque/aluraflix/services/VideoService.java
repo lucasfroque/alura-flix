@@ -10,9 +10,9 @@ import com.lucasfroque.aluraflix.respositories.CategoryRepository;
 import com.lucasfroque.aluraflix.respositories.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
@@ -35,8 +35,9 @@ public class VideoService {
         return videoRepository.save(video);
     }
 
-    public List<VideoDto> findAll(){
-        return videoRepository.findAll().stream().map(VideoDto::new).toList();
+    public Page<VideoDto> findAll(Pageable pageable){
+        return videoRepository.findAll(pageable)
+                .map(VideoDto::new);
     }
 
     public VideoDto findById(Long id){
@@ -44,11 +45,9 @@ public class VideoService {
                 () -> new VideoNotFoundException(id));
         return new VideoDto(video);
     }
-    public List<VideoDto> findByTitle(String name){
-        return videoRepository.findVideosByTitleContainingIgnoreCase(name)
-                .stream()
-                .map(VideoDto::new)
-                .toList();
+    public Page<VideoDto> findByTitle(String title, Pageable pageable){
+        return videoRepository.findVideosByTitleContainingIgnoreCase(title, pageable)
+                .map(VideoDto::new);
     }
     public VideoDto update(Long id, VideoForm videoForm){
         Video video = videoRepository.findById(id).orElseThrow(
