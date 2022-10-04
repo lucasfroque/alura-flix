@@ -11,3 +11,7 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL5Dialect
+
+jwt:
+  secret: aluraflix
+  expiration: 86400000
