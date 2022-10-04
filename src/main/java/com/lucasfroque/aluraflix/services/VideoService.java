@@ -49,6 +49,11 @@ public class VideoService {
         return videoRepository.findVideosByTitleContainingIgnoreCase(title, pageable)
                 .map(VideoDto::new);
     }
+    public Page<VideoDto> findFreeVideos(Pageable pageable){
+        return videoRepository.findVideosByFreeIsTrue(pageable)
+                .map(VideoDto::new);
+    }
+
     public VideoDto update(Long id, VideoForm videoForm){
         Video video = videoRepository.findById(id).orElseThrow(
                 () -> new VideoNotFoundException(id));

@@ -24,10 +24,19 @@ public class Video {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+    private boolean free;
 
     public Video(String title, String description, String url) {
         this.title = title;
         this.description = description;
         this.url = url;
     }
+
+    public Video(String title, String description, String url, boolean free) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.free = free;
+    }
+
 }

@@ -24,8 +24,9 @@ public class VideoForm {
     @Size(min = 10, message = "url must have at least 10 characters")
     private String url;
     private Long categoryId;
+    private boolean free;
 
     public Video toVideo(){
-        return new Video(this.title, this.description, this.url);
+        return new Video(this.title, this.description, this.url, this.free);
     }
 }

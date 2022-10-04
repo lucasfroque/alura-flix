@@ -51,6 +51,11 @@ public class VideoController {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
+    @GetMapping(value = "/free")
+    public ResponseEntity<Page<VideoDto>> findFreeVideos(@PageableDefault(size = 10, direction = Direction.DESC, sort = "id") Pageable pageable){
+        return ResponseEntity.ok().body(service.findFreeVideos(pageable));
+    }
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<VideoDto> update(@PathVariable Long id, @RequestBody @Valid VideoForm videoForm){
         return ResponseEntity.ok().body(service.update(id, videoForm));

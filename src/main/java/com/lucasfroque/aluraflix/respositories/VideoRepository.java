@@ -9,4 +9,5 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
 
     Page<Video> findAll(Pageable pageable);
     Page<Video> findVideosByTitleContainingIgnoreCase(String name, Pageable pageable);
+    Page<Video> findVideosByFreeIsTrue(Pageable pageable);
 }
