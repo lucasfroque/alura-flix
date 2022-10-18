@@ -61,11 +61,11 @@ class VideoServiceTest {
         category2 = new Category(CATEGORY_TITLE_2, CATEGORY_COLOR_2);
         category2.setId(CATEGORY_ID_2);
 
-        video1 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category);
-        video2 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category2);
+        video1 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category, false);
+        video2 = new Video(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, category2, false);
 
-        videoForm = new VideoForm(VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, CATEGORY_ID_2);
-        videoFormWithoutCategory = new VideoForm(VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, null);
+        videoForm = new VideoForm(VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, CATEGORY_ID_2, false);
+        videoFormWithoutCategory = new VideoForm(VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_URL, null, false);
         videoPage = new PageImpl<>(List.of(video1, video2));
     }
 
