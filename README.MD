@@ -14,12 +14,13 @@
 <li>H2 Database</li>
 <li>JUnit</li>
 <li>Mockito</li>
+<li>Trello</li>
 </ul>
 
 <h2 style="text-align: center;">Como executar o projeto</h2>
 <p>Pré-requisitos: Java 17</p>
-    
-    ```bash
+
+
     # clonar repositório
     git clone
 
@@ -28,7 +29,7 @@
 
     # executar o projeto
       mvn spring-boot:run
-    ```
+
 
 <h2 style="text-align: center;">Regras de serviço</h2>
 <h3>Autenticação:</h3>
@@ -48,22 +49,22 @@
 <h3>Free videos:</h3>
 <p>Existem videos que podem ser assistidos sem estar autenticado.</p>
 
-    ```bash
+
     GET /videos/free
-    ```
+
 
 <h3>Paginação e ordenação:</h3>
 <p>Os endpoints de listagem de vídeos e categorias aceitam os parâmetros de paginação e ordenação.</p>
 
-    ```bash
+
     GET /videos?page=0&size=10&sort=id,desc
     GET /categories?page=0&size=10&sort=id,desc
-    ```
+
 
 <h3>Endpoints:</h3>
 <p>Os endpoints da API são:</p>
 
-    ```bash
+
     POST /login
     GET /videos
     GET /videos/{id}
@@ -79,12 +80,6 @@
     GET /users/{id}
     PUT /users/{id}
     DELETE /users/{id}
-    ```
-
-
-
-
-
 
 
 
