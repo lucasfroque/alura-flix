@@ -3,9 +3,6 @@ package com.lucasfroque.aluraflix.dto.response;
 import com.lucasfroque.aluraflix.entities.Roles;
 import com.lucasfroque.aluraflix.entities.User;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.List;
 
 @Getter
 public class UserDto {
